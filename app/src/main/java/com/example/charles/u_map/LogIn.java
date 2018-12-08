@@ -22,9 +22,7 @@ public class LogIn extends AppCompatActivity {
     private EditText idInput;
     private EditText passwordInput;
     private Button signIn;
-
-    String area = "IA";
-    String room = "101";
+    
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
