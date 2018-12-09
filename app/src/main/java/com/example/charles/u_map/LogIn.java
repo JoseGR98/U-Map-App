@@ -3,6 +3,7 @@ package com.example.charles.u_map;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -31,6 +32,9 @@ public class LogIn extends AppCompatActivity {
         passwordInput = findViewById(R.id.passwordInputBox);
         signIn = findViewById(R.id.signInButton);
         alerts = findViewById(R.id.alertsView);
+
+        idInput.setFilters(new InputFilter[] { new InputFilter.LengthFilter(8) });
+        passwordInput.setFilters(new InputFilter[] { new InputFilter.LengthFilter(20) });
 
         signIn.setOnClickListener(new View.OnClickListener() {
             @Override
