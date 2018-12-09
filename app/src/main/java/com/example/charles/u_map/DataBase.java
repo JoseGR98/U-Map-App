@@ -26,7 +26,7 @@ public class DataBase extends AsyncTask <String, String, String> {
     public ResultSet makeQuery(String query) throws SQLException {
         this.query = query;
         try {
-            this.execute("").get();
+            this.execute("query").get();
             return result;
         } catch (ExecutionException e) {
             e.printStackTrace();
@@ -34,6 +34,22 @@ public class DataBase extends AsyncTask <String, String, String> {
             e.printStackTrace();
         }
         return null;
+    }
+
+    //make query that will be used to insert data.
+
+    public void makeUpdateQuery(String query){
+
+        this.query = query;
+
+        try {
+            this.execute("update").get();
+        }catch(InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
     }
 
     //Close the connection to the server
@@ -45,8 +61,9 @@ public class DataBase extends AsyncTask <String, String, String> {
             e.printStackTrace();
         }
     }
-
     // Handle query
+
+
 
     @Override
     protected String doInBackground(String...params){
@@ -56,6 +73,14 @@ public class DataBase extends AsyncTask <String, String, String> {
                 z = "check internet access";
             }
             else {
+
+                if(params[0].compareTo("update") == 0){
+                    Statement stmt = databaseLink.createStatement();
+                    stmt.executeUpdate(query);
+                    z = "Query successful";
+                    isSuccess = true;
+                    return z;
+                }
                 Statement stmt = databaseLink.createStatement();
                 ResultSet rs = stmt.executeQuery(query);
                 if(rs.next()){

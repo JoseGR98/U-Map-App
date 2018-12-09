@@ -88,6 +88,7 @@ public class LogIn extends AppCompatActivity {
                 if ( password.compareTo( passObtained.trim() ) == 0 ) {       //Si la contraseña esta correcta
                     alerts.setText("");
                     Intent goToAreaSelector = new Intent(getApplicationContext(), MainActivity.class);
+                    goToAreaSelector.putExtra("com.example.charles.u_map.ID", idObtained);
                     startActivity(goToAreaSelector);
                 }
                 else {

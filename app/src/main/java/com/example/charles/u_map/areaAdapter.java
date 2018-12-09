@@ -8,6 +8,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+//Adapter that takes two arrays and creates multiple "slots" with the format of fav_nax.xml
+
 public class areaAdapter extends BaseAdapter {
 
     LayoutInflater layoutI;
@@ -20,21 +22,31 @@ public class areaAdapter extends BaseAdapter {
         layoutI = (LayoutInflater) c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
+    //obligatory methods for creating the layout
+
+
+
+    //Get the number of elements to create
+
     @Override
     public int getCount() {
         return areas.length;
     }
 
+    //get an item from the array
     @Override
     public Object getItem(int position) {
         return areas[position];
     }
+
+    //return position because there isn't an id
 
     @Override
     public long getItemId(int position) {
         return position;
     }
 
+    //iterate over the elements of the arrays and add their values into the respective TextViews.
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
@@ -47,6 +59,8 @@ public class areaAdapter extends BaseAdapter {
 
         areaTextView.setText(area);
         areaDTextView.setText(description);
+
+        //add the respective image.
 
         switch (position){
             case 0: areaImageView.setImageResource(R.drawable.ia);

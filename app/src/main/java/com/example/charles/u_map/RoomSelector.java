@@ -49,13 +49,31 @@ public class RoomSelector extends AppCompatActivity {
 
         final Intent in = getIntent();
 
+
         TextView area = (TextView) findViewById(R.id.areaTextView);
         area.setText(in.getStringExtra("com.example.charles.u_map.AREA"));
+        TextView fav = (TextView) findViewById(R.id.favView);
         roomAdapter roomA = new roomAdapter(this, classrooms);
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
+        //Add the room adapter to the view.
+
         roomGridView.setAdapter(roomA);
+
+
+        //Start the favourite activity when the label is clicked.
+
+        fav.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent goToFav = new Intent(getApplicationContext(), FavouriteClassrooms.class);
+                goToFav.putExtra("com.example.charles.u_map.ID", in.getStringExtra("com.example.charles.u_map.ID"));
+                startActivity(goToFav);
+            }
+        });
+
+        //When an item is clicked, init the google map with the classroom number and area.
 
         roomGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -67,7 +85,24 @@ public class RoomSelector extends AppCompatActivity {
                 startActivity(goToMap);
             }
         });
+
+        //When long clicked, add the classroom to favourite list.
+
+        roomGridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                CharSequence text = "Salón : " + in.getStringExtra("com.example.charles.u_map.AREA") + "-" + classrooms[position] + " agregado a favoritos";
+                DataBase db = new DataBase();
+                db.makeUpdateQuery("INSERT INTO FAVORITOS VALUES (" +  in.getStringExtra("com.example.charles.u_map.ID") + ",'" +  in.getStringExtra("com.example.charles.u_map.AREA") + "'," + classrooms[position] + ")");
+                Toast t = Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG);
+                t.show();
+
+                return  true;
+            }
+        });
     }
+
+    //Check if the phone has google play services. These are needed for using the map.
 
     public  boolean hasGoogleServices(){
 
@@ -90,6 +125,9 @@ public class RoomSelector extends AppCompatActivity {
         return false;
     }
 
+
+    //If GPS is not enabled, ask the user to do so.
+
     private void buildAlertMessageNoGps() {
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -108,6 +146,8 @@ public class RoomSelector extends AppCompatActivity {
         alert.show();
     }
 
+    //Check if the GPS is enabled.
+
     public boolean isGPSEnabled(){
 
         final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -118,6 +158,8 @@ public class RoomSelector extends AppCompatActivity {
         }
         return true;
     }
+
+    //If the app hasn't the location permission, ask the user to aneable it.
 
     private void getLocationPermission() {
 
@@ -133,7 +175,12 @@ public class RoomSelector extends AppCompatActivity {
         }
     }
 
+    //Check if the necessary resources are ready.
+
     private boolean checkMapServices(){
+
+        // hasGoogleServices() && isGPSEnabled() ? return true : return false;
+
         if(hasGoogleServices()){
             if(isGPSEnabled()){
                 return true;
@@ -141,6 +188,9 @@ public class RoomSelector extends AppCompatActivity {
         }
         return false;
     }
+
+
+    //Once the activity for enabling the GPS is done, check that is truly ready.
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -155,6 +205,8 @@ public class RoomSelector extends AppCompatActivity {
         }
 
     }
+
+    //Once the activity for enabling permissions is done, check that are truly ready.
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
